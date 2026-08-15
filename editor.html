@@ -61,9 +61,46 @@
       عملك <strong>يُحفظ تلقائياً في هذا المتصفح</strong>، فلا تخسره إذا أغلقت الصفحة.
     </p>
 
-    <!-- ══ 1. meta ══ -->
+    <!-- ══ 1. connect to GitHub ══ -->
+    <section class="ed-block" id="ghBlock">
+      <h2><span class="num">1</span> الربط مع GitHub <span id="ghStatusBadge" class="mini-badge">غير متصل</span></h2>
+      <p class="hint">مطلوب مرة واحدة فقط — بعدها ترفع الصور والفيديوهات مباشرة من هذه الصفحة بضغطة زر، بدل الذهاب لموقع GitHub في كل مرة.</p>
+
+      <div id="ghForm">
+        <ol class="steps">
+          <li>افتح <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">صفحة إنشاء التوكن</a> وسجّل دخولك إذا طُلب منك.</li>
+          <li>في «Repository access» اختر <strong>Only select repositories</strong> ثم اختر <code>alaswadmohd5-cmd/Mohd</code>.</li>
+          <li>في «Permissions» ← «Repository permissions» افتح <strong>Contents</strong> واختر <strong>Read and write</strong>.</li>
+          <li>انزل واضغط <strong>Generate token</strong>، وانسخ التوكن (يبدأ بـ <code>github_pat_</code>).</li>
+          <li>الصقه هنا واضغط «ربط»:</li>
+        </ol>
+        <div class="ed-grid narrow" style="margin-block-start:.8rem">
+          <div class="fld" style="grid-column:1/-1">
+            <label>التوكن</label>
+            <input class="inp" id="ghTokenInput" type="password" placeholder="github_pat_…" autocomplete="off">
+          </div>
+        </div>
+        <div class="ed-actions">
+          <button class="btn btn-accent" id="ghConnectBtn" type="button">ربط</button>
+          <span class="ed-status spacer" id="ghStatusMsg"></span>
+        </div>
+        <p class="ed-intro" style="margin-block-start:1rem">
+          🔒 التوكن يُحفظ في متصفحك فقط ويُرسل مباشرة لـ GitHub ولا يمر بأي مكان آخر. لا تربطه من جهاز عام أو مشترك،
+          وإذا انتهيت من الإدخال اضغط «فصل الربط».
+        </p>
+      </div>
+
+      <div id="ghConnected" hidden>
+        <p class="hint">متصل بمستودع <strong id="ghRepoName"></strong> ✓</p>
+        <div class="ed-actions">
+          <button class="btn btn-ghost btn-danger" id="ghDisconnectBtn" type="button">فصل الربط</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 2. meta ══ -->
     <section class="ed-block">
-      <h2><span class="num">1</span> المعلومات الأساسية</h2>
+      <h2><span class="num">2</span> المعلومات الأساسية</h2>
       <p class="hint">تظهر في أعلى السجل وفي صفحة الإقرار.</p>
       <div class="ed-grid">
         <div class="fld">
@@ -87,16 +124,16 @@
       </div>
     </section>
 
-    <!-- ══ 2. saved visits ══ -->
+    <!-- ══ 3. saved visits ══ -->
     <section class="ed-block">
-      <h2><span class="num">2</span> الزيارات المُسجّلة <span id="savedCount" class="mini-badge"></span></h2>
+      <h2><span class="num">3</span> الزيارات المُسجّلة <span id="savedCount" class="mini-badge"></span></h2>
       <p class="hint">اضغط «تعديل» لتحميل الزيارة في النموذج أدناه.</p>
       <div class="saved" id="savedList"></div>
     </section>
 
-    <!-- ══ 3. visit form ══ -->
+    <!-- ══ 4. visit form ══ -->
     <section class="ed-block">
-      <h2><span class="num">3</span> <span id="formMode">إضافة زيارة</span></h2>
+      <h2><span class="num">4</span> <span id="formMode">إضافة زيارة</span></h2>
       <p class="hint">التاريخ والحالة إلزاميان — الباقي اختياري وتقدر تكمّله لاحقاً.</p>
 
       <div class="ed-grid narrow" style="margin-block-end:1rem">
@@ -146,19 +183,19 @@
       </div>
 
       <div class="fld" style="margin-block-end:1.4rem">
-        <label>الصور <span class="opt">— ضع الملف في <code>assets/media/photos/</code> واكتب اسمه</span></label>
+        <label>الصور <span class="opt">— اضغط «إضافة صورة» ثم زر الرفع داخلها</span></label>
         <div class="rows" id="photoRows"></div>
         <button class="add-row" type="button" data-add="photo">+ إضافة صورة</button>
       </div>
 
       <div class="fld" style="margin-block-end:1.4rem">
-        <label>الفيديوهات <span class="opt">— ضع الملف في <code>assets/media/videos/</code></span></label>
+        <label>الفيديوهات</label>
         <div class="rows" id="videoRows"></div>
         <button class="add-row" type="button" data-add="video">+ إضافة فيديو</button>
       </div>
 
       <div class="fld" style="margin-block-end:1.4rem">
-        <label>لقطات المحادثة <span class="opt">— ضع الملف في <code>assets/media/chats/</code></span></label>
+        <label>لقطات المحادثة</label>
         <div class="rows" id="shotRows"></div>
         <button class="add-row" type="button" data-add="shot">+ إضافة لقطة</button>
       </div>
@@ -176,9 +213,9 @@
       </div>
     </section>
 
-    <!-- ══ 4. export ══ -->
+    <!-- ══ 5. export ══ -->
     <section class="ed-block">
-      <h2><span class="num">4</span> إخراج الملف</h2>
+      <h2><span class="num">5</span> إخراج الملف</h2>
       <p class="hint">هذا هو محتوى <code>data/visits.js</code> كما سيُحفظ.</p>
       <textarea class="code-out" id="output" readonly spellcheck="false"></textarea>
       <ol class="steps">
@@ -193,9 +230,9 @@
       </div>
     </section>
 
-    <!-- ══ 5. import ══ -->
+    <!-- ══ 6. import ══ -->
     <section class="ed-block">
-      <h2><span class="num">5</span> متابعة على ملف موجود</h2>
+      <h2><span class="num">6</span> متابعة على ملف موجود</h2>
       <p class="hint">لو عندك <code>data/visits.js</code> فيه بيانات سابقة: افتحه، انسخ محتواه كاملاً، والصقه هنا لتكمل عليه.</p>
       <textarea class="code-out" id="importBox" style="min-height:120px" placeholder="window.RECORD = { ... };" spellcheck="false"></textarea>
       <div class="ed-actions">
@@ -207,6 +244,7 @@
   </div>
 </main>
 
+<script src="assets/js/gh-upload.js"></script>
 <script src="assets/js/editor.js"></script>
 </body>
 </html>

@@ -34,22 +34,35 @@
 
   /* ── repeatable rows ───────────────────────────────────── */
   const ROW = {
-    photo: { host: '#photoRows', label: 'صورة', folder: 'assets/media/photos/' },
-    video: { host: '#videoRows', label: 'فيديو', folder: 'assets/media/videos/' },
-    shot:  { host: '#shotRows',  label: 'لقطة',  folder: 'assets/media/chats/'  }
+    photo: { host: '#photoRows', label: 'صورة', folder: 'assets/media/photos/', accept: 'image/*',                thumb: true },
+    video: { host: '#videoRows', label: 'فيديو', folder: 'assets/media/videos/', accept: 'video/*',                thumb: false },
+    shot:  { host: '#shotRows',  label: 'لقطة',  folder: 'assets/media/chats/',  accept: 'image/*',                thumb: true }
   };
+  const STEP_AR = { reading: 'جارٍ قراءة الملف…', checking: 'جارٍ التحقق…', uploading: 'جارٍ الرفع… قد يطول قليلاً للفيديو' };
 
   function mediaRow(kind, val) {
     val = val || {};
     const cfg = ROW[kind];
+    const manualUrl = `https://github.com/${GH.OWNER}/${GH.REPO}/upload/${GH.BRANCH}/${cfg.folder}`;
     const el = document.createElement('div');
     el.className = 'row-card';
     el.dataset.kind = kind;
     el.innerHTML = `
       <div class="row-head"><span>${cfg.label}</span><span class="idx"></span>
         <button class="row-del" type="button" title="حذف">&times;</button></div>
+
+      <div class="upload-zone">
+        <div class="upload-preview" hidden><img class="f-thumb" alt=""></div>
+        <label class="upload-btn">
+          <input type="file" class="f-file" accept="${cfg.accept}" hidden>
+          <span>⤴ رفع ${cfg.label} من جهازك</span>
+        </label>
+        <span class="upload-status"></span>
+        <a class="upload-manual" href="${manualUrl}" target="_blank" rel="noopener">أو رفع يدوي من GitHub ↗</a>
+      </div>
+
       <div class="ed-grid narrow">
-        <div class="fld"><label>اسم الملف</label>
+        <div class="fld"><label>اسم الملف <span class="opt">(يُملأ تلقائياً بعد الرفع)</span></label>
           <input class="inp f-src" placeholder="2026-01-03-01.jpg"></div>
         <div class="fld"><label>وقت الالتقاط <span class="opt">(اختياري)</span></label>
           <input type="datetime-local" class="inp f-taken"></div>
@@ -64,7 +77,57 @@
     $('.f-taken', el).value = (val.taken || '').replace(' ', 'T').slice(0, 16);
     $('.f-capar', el).value = (val.caption && val.caption.ar) || '';
     $('.f-capen', el).value = (val.caption && val.caption.en) || '';
+
+    if (val.src && cfg.thumb) showRemoteThumb(el, val.src);
+
+    $('.f-file', el).addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) handleUpload(el, kind, file);
+      e.target.value = '';
+    });
+
     return el;
+  }
+
+  function showRemoteThumb(rowEl, src) {
+    const thumb = $('.f-thumb', rowEl);
+    const wrap = $('.upload-preview', rowEl);
+    thumb.onerror = () => { wrap.hidden = true; };
+    thumb.src = `https://raw.githubusercontent.com/${GH.OWNER}/${GH.REPO}/${GH.BRANCH}/${src}`;
+    wrap.hidden = false;
+  }
+
+  async function handleUpload(rowEl, kind, file) {
+    const statusEl = $('.upload-status', rowEl);
+    const srcInput = $('.f-src', rowEl);
+
+    if (ROW[kind].thumb && file.type.startsWith('image/')) {
+      const thumb = $('.f-thumb', rowEl);
+      thumb.onerror = null;
+      thumb.src = URL.createObjectURL(file);
+      $('.upload-preview', rowEl).hidden = false;
+    }
+
+    if (!GH.getToken()) {
+      statusEl.textContent = 'اربط الموقع بحساب GitHub أولاً (البند ١).';
+      statusEl.className = 'upload-status err';
+      $('#ghBlock').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    statusEl.className = 'upload-status busy';
+    statusEl.textContent = '…';
+    try {
+      const { name } = await GH.uploadFile(file, ROW[kind].folder, (step) => {
+        statusEl.textContent = STEP_AR[step] || '…';
+      });
+      srcInput.value = name;
+      statusEl.textContent = 'تم الرفع ✓';
+      statusEl.className = 'upload-status ok';
+    } catch (err) {
+      statusEl.textContent = err.message;
+      statusEl.className = 'upload-status err';
+    }
   }
 
   function msgRow(val) {
@@ -321,10 +384,59 @@ ${monthsJS || '    /* لا توجد زيارات بعد */'}
 
   /* ── events ────────────────────────────────────────────── */
   function flash(el, text, kind) {
+    const keepSpacer = el.classList.contains('spacer');
     el.textContent = text;
-    el.className = 'ed-status ' + (kind || '') + (el.id === 'formStatus' ? ' spacer' : '');
+    el.className = 'ed-status ' + (kind || '') + (keepSpacer ? ' spacer' : '');
     if (kind === 'ok') setTimeout(() => { el.textContent = ''; }, 3500);
   }
+
+  /* ── GitHub connection ────────────────────────────────────── */
+  async function refreshGhStatus(silent) {
+    const badge = $('#ghStatusBadge');
+    if (!GH.getToken()) {
+      badge.textContent = 'غير متصل';
+      badge.className = 'mini-badge';
+      $('#ghConnected').hidden = true;
+      $('#ghForm').hidden = false;
+      return;
+    }
+    badge.textContent = 'جارٍ التحقق…';
+    badge.className = 'mini-badge';
+    try {
+      const full = await GH.testConnection();
+      badge.textContent = 'متصل ✓';
+      badge.className = 'mini-badge ok';
+      $('#ghRepoName').textContent = full;
+      $('#ghConnected').hidden = false;
+      $('#ghForm').hidden = true;
+    } catch (err) {
+      badge.textContent = 'التوكن غير صالح';
+      badge.className = 'mini-badge bad';
+      $('#ghConnected').hidden = true;
+      $('#ghForm').hidden = false;
+      if (!silent) flash($('#ghStatusMsg'), err.message, 'err');
+    }
+  }
+
+  $('#ghConnectBtn').addEventListener('click', async () => {
+    const val = $('#ghTokenInput').value.trim();
+    if (!val) { flash($('#ghStatusMsg'), 'الصق التوكن أولاً.', 'err'); return; }
+    flash($('#ghStatusMsg'), 'جارٍ التحقق…', '');
+    try {
+      await GH.testConnection(val);
+      $('#ghTokenInput').value = '';
+      flash($('#ghStatusMsg'), 'تم الربط بنجاح ✓', 'ok');
+      refreshGhStatus(true);
+    } catch (err) {
+      flash($('#ghStatusMsg'), err.message, 'err');
+    }
+  });
+
+  $('#ghDisconnectBtn').addEventListener('click', () => {
+    if (!confirm('فصل الربط مع GitHub؟ تقدر تربطه مرة ثانية بنفس التوكن أو توكن جديد.')) return;
+    GH.setToken('');
+    refreshGhStatus(true);
+  });
 
   document.addEventListener('click', (e) => {
     const add = e.target.closest('[data-add]');
@@ -447,4 +559,5 @@ ${monthsJS || '    /* لا توجد زيارات بعد */'}
   bindMeta();
   resetForm();
   save();
+  refreshGhStatus(true);
 })();
