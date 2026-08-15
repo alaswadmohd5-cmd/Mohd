@@ -1,0 +1,178 @@
+/* ══════════════════════════════════════════════════════════════
+   Editor — builds data/visits.js from a form.
+   Rides on the tokens defined in styles.css.
+   ══════════════════════════════════════════════════════════════ */
+
+.ed-main { padding-block: 2rem 4rem; }
+
+.ed-intro {
+  background: var(--surface); border: 1px solid var(--line);
+  border-inline-start: 3px solid var(--accent);
+  border-radius: var(--radius); padding: 1.2rem 1.4rem; margin-block-end: 2rem;
+  font-size: .93rem; color: var(--ink-500); line-height: 1.8;
+}
+.ed-intro strong { color: var(--ink-900); }
+
+.ed-block { margin-block-end: 2.2rem; }
+.ed-block > h2 {
+  font-size: 1.1rem; font-weight: 600; margin-block-end: .3rem;
+  display: flex; align-items: center; gap: .6rem;
+}
+.ed-block > h2 .num {
+  width: 26px; height: 26px; flex: none; display: grid; place-items: center;
+  border-radius: 8px; font-size: .78rem; font-family: var(--font-en);
+  background: var(--accent-soft); color: var(--accent-ink);
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent);
+}
+.ed-block > p.hint { color: var(--ink-400); font-size: .86rem; margin-block-end: 1rem; }
+
+/* ── fields ────────────────────────────────────────────────── */
+.ed-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: .9rem; }
+.ed-grid.narrow { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+
+.fld { display: flex; flex-direction: column; gap: .35rem; min-width: 0; }
+.fld > label { font-size: .8rem; font-weight: 600; color: var(--ink-500); }
+.fld > label .opt { font-weight: 400; color: var(--ink-400); font-size: .92em; }
+
+.inp {
+  width: 100%; font: inherit; font-size: .9rem; color: var(--ink-900);
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); padding: .55rem .75rem;
+  transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
+}
+.inp:focus {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
+}
+.inp::placeholder { color: var(--ink-400); opacity: .75; }
+textarea.inp { resize: vertical; min-height: 76px; line-height: 1.7; }
+select.inp { cursor: pointer; }
+input[type="date"].inp, input[type="time"].inp, input[type="datetime-local"].inp {
+  direction: ltr; unicode-bidi: isolate; font-family: var(--font-en);
+}
+
+/* a bilingual pair reads as one field */
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; }
+.pair .lang-wrap { position: relative; display: flex; }
+.pair .lang-wrap .inp { padding-inline-end: 2.2rem; }
+/* the EN half runs LTR as a whole, so its tag lands after the text, not on top of it */
+.pair .lang-wrap[data-l="en"] { direction: ltr; }
+.pair .lang-wrap[data-l="en"] .inp { text-align: start; }
+.pair .tag {
+  position: absolute; inset-block-start: 50%; inset-inline-end: .5rem; transform: translateY(-50%);
+  font-size: .64rem; font-weight: 600; letter-spacing: .04em; color: var(--ink-400);
+  background: var(--surface-2); border: 1px solid var(--line-soft);
+  border-radius: 5px; padding: .05rem .3rem; pointer-events: none;
+}
+.pair.tall .lang-wrap { align-items: stretch; }
+.pair.tall .tag { inset-block-start: .5rem; transform: none; }
+
+/* ── repeatable rows ───────────────────────────────────────── */
+.rows { display: flex; flex-direction: column; gap: .7rem; }
+.row-card {
+  background: var(--surface-2); border: 1px solid var(--line-soft);
+  border-radius: var(--radius-sm); padding: .85rem;
+  display: grid; gap: .6rem; position: relative;
+}
+.row-card .row-head {
+  display: flex; align-items: center; gap: .5rem;
+  font-size: .76rem; font-weight: 600; color: var(--ink-400);
+}
+.row-card .row-head .idx { font-family: var(--font-en); }
+.row-del {
+  margin-inline-start: auto; cursor: pointer; border: 1px solid var(--line);
+  background: var(--surface); color: var(--ink-400);
+  width: 26px; height: 26px; border-radius: 8px; line-height: 1;
+  display: grid; place-items: center; font-size: 1rem; transition: .2s var(--ease);
+}
+.row-del:hover { color: var(--rose); border-color: var(--rose); }
+
+.add-row {
+  align-self: flex-start; cursor: pointer; font-size: .84rem;
+  border: 1px dashed var(--line); background: transparent; color: var(--ink-500);
+  border-radius: 999px; padding: .45rem 1rem; transition: .2s var(--ease);
+}
+.add-row:hover { border-color: var(--accent); color: var(--accent-ink); background: var(--accent-soft); }
+
+/* ── message bubbles in the editor ─────────────────────────── */
+.msg-row { display: grid; grid-template-columns: 130px 190px 1fr auto; gap: .5rem; align-items: start; }
+.msg-row.me   { border-inline-start: 3px solid var(--accent); }
+.msg-row.them { border-inline-start: 3px solid var(--teal); }
+
+/* ── saved visit list ──────────────────────────────────────── */
+.saved { display: flex; flex-direction: column; gap: .55rem; }
+.saved-item {
+  display: flex; align-items: center; gap: .8rem; flex-wrap: wrap;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); padding: .7rem .9rem; transition: .2s var(--ease);
+}
+.saved-item:hover { border-color: color-mix(in srgb, var(--accent) 32%, var(--line)); }
+.saved-item.editing { border-color: var(--accent); background: var(--accent-soft); }
+.saved-date {
+  font-family: var(--font-en); font-size: .84rem; font-weight: 600;
+  direction: ltr; unicode-bidi: isolate; min-width: 88px;
+}
+.saved-title { flex: 1 1 160px; font-size: .9rem; min-width: 0; }
+.saved-counts { display: flex; gap: .35rem; font-size: .72rem; color: var(--ink-400); }
+.saved-counts span {
+  background: var(--surface-2); border: 1px solid var(--line-soft);
+  border-radius: 999px; padding: .05rem .45rem;
+}
+.saved-actions { display: flex; gap: .35rem; }
+
+.ed-empty {
+  text-align: center; color: var(--ink-400); font-size: .9rem;
+  border: 1px dashed var(--line); border-radius: var(--radius-sm); padding: 1.6rem;
+}
+
+/* ── sticky action bar ─────────────────────────────────────── */
+.ed-actions {
+  position: sticky; inset-block-end: 0; z-index: 30;
+  display: flex; flex-wrap: wrap; gap: .6rem; align-items: center;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(12px);
+  border-block-start: 1px solid var(--line);
+  padding-block: .9rem; margin-block-start: 1.5rem;
+}
+.ed-actions .spacer { margin-inline-start: auto; }
+.ed-status { font-size: .82rem; color: var(--ink-400); }
+.ed-status.ok { color: var(--teal); }
+.ed-status.err { color: var(--rose); }
+
+.btn-accent {
+  background: var(--accent); color: #fff; border-color: var(--accent);
+}
+.btn-accent:hover { box-shadow: var(--shadow-md); }
+.btn-danger { color: var(--rose); border-color: color-mix(in srgb, var(--rose) 40%, var(--line)); }
+.btn-danger:hover { background: var(--bad-bg); }
+
+/* ── export / import ───────────────────────────────────────── */
+.code-out {
+  width: 100%; min-height: 220px; font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: .78rem; line-height: 1.6; direction: ltr; text-align: start;
+  background: var(--surface-2); color: var(--ink-700);
+  border: 1px solid var(--line); border-radius: var(--radius-sm); padding: .9rem;
+  white-space: pre; overflow: auto; resize: vertical;
+}
+
+.steps { counter-reset: s; display: grid; gap: .6rem; margin-block-start: 1rem; }
+.steps li {
+  list-style: none; counter-increment: s; position: relative;
+  padding-inline-start: 2rem; font-size: .9rem; color: var(--ink-500);
+}
+.steps li::before {
+  content: counter(s); position: absolute; inset-inline-start: 0; inset-block-start: .1rem;
+  width: 1.4rem; height: 1.4rem; border-radius: 50%; display: grid; place-items: center;
+  background: var(--accent-soft); color: var(--accent-ink);
+  font-size: .72rem; font-weight: 600; font-family: var(--font-en);
+}
+.steps code { background: var(--surface-2); border: 1px solid var(--line-soft);
+  border-radius: 5px; padding: .05em .35em; font-size: .88em;
+  direction: ltr; unicode-bidi: isolate; }
+
+@media (max-width: 720px) {
+  .pair { grid-template-columns: 1fr; }
+  .msg-row { grid-template-columns: 1fr; }
+}
+
+@media print { .ed-main { display: none; } }
