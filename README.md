@@ -27,6 +27,18 @@ python3 -m http.server 8000     # ثم افتح · then open  http://localhost:8
 كل شيء في ملف واحد: **`data/visits.js`**
 Everything lives in one file: **`data/visits.js`**
 
+### الطريقة المُوصى بها: المحرّر · Recommended: the editor
+
+افتح **`editor.html`** — نموذج يبني الملف نيابةً عنك بدون كتابة أي شيفرة:
+عبّئ الحقول، اضغط **«تنزيل الملف»**، وضع الناتج في مجلد `data/` بدل الملف القديم.
+عملك يُحفظ تلقائياً في المتصفح، ويمكنك لصق ملف قديم في خانة «متابعة على ملف موجود» لتكمل عليه.
+
+Open **`editor.html`** — a form that builds the file for you, no code required. Fill it in,
+press **Download**, drop the result into `data/`. Work autosaves in the browser, and an
+existing file can be pasted back in to keep editing it.
+
+### أو يدوياً · Or by hand
+
 افتحه بأي محرر نصوص (Notepad / TextEdit / VS Code)، عدّل الأمثلة الموجودة، احفظ، ثم حدّث الصفحة.
 
 ### شكل الزيارة الواحدة · Shape of one visit
@@ -131,22 +143,30 @@ cards never split across pages, and the exhibit index prints as a numbered table
 ## ٦) بنية الملفات · File structure
 
 ```
-index.html                 الصفحة الوحيدة · the single page
-data/visits.js             ← بياناتك (الملف الوحيد الذي تعدّله) · your data
+index.html                 صفحة السجل · the record page
+editor.html                نموذج يبني ملف البيانات · form that builds the data file
+data/visits.js             ← بياناتك · your data
 assets/css/styles.css      التصميم + تنسيق الطباعة · design + print layout
+assets/css/editor.css      تصميم المحرّر · editor styles
 assets/js/i18n.js          نصوص الواجهة بالعربي والإنجليزي · UI strings
+assets/js/guard.js         شاشة الخطأ إذا تعطّل ملف البيانات · data-file guard
 assets/js/app.js           منطق العرض · rendering logic
+assets/js/editor.js        منطق المحرّر · editor logic
 assets/media/photos|videos|chats/   مرفقاتك · your attachments
 ```
 
 ---
 
-## ٧) إذا ظهرت الصفحة فارغة · If the page comes up blank
+## ٧) إذا ظهر خطأ بدل السجل · If an error appears instead of the record
 
-يعني غالباً وجود خطأ مطبعي في `data/visits.js` — فاصلة `,` ناقصة أو زائدة، أو علامة تنصيص `"` غير مغلقة.
+الصفحة لا تظهر فارغة أبداً: إذا تعذّر قراءة `data/visits.js` تظهر شاشة تشرح السبب —
+غالباً فاصلة `,` ناقصة أو زائدة، أو علامة تنصيص `"` غير مغلقة.
 
-افتح أدوات المطوّر في المتصفح (`F12`) → تبويب `Console` — سيشير إلى رقم السطر.
-أو تحقق من الملف بالأمر:
+أسهل حل: أعِد بناء الملف من **`editor.html`** بدل إصلاحه يدوياً.
+The page never goes blank — a guard screen explains the problem. The quickest fix is to
+rebuild the file from **`editor.html`**.
+
+لمعرفة رقم السطر: `F12` → تبويب `Console`. أو تحقق من الملف بالأمر:
 
 ```bash
 node -e "global.window={};require('./data/visits.js');console.log('OK')"
