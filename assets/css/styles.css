@@ -506,6 +506,11 @@ html[data-theme="dark"] .i-moon { display: block; }
 .footer { border-block-start: 1px solid var(--line); padding-block: 2rem; margin-block-start: 2rem; }
 .footer-inner { display: flex; flex-wrap: wrap; gap: .6rem 2rem; justify-content: space-between; }
 .footer p { font-size: .82rem; color: var(--ink-400); }
+.edit-link {
+  color: var(--accent); border-block-end: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  padding-block-end: 1px; transition: .2s var(--ease);
+}
+.edit-link:hover { color: var(--accent-ink); border-block-end-color: var(--accent); }
 
 .empty-state { text-align: center; color: var(--ink-400); padding-block: 3rem; font-size: .95rem; }
 
@@ -584,7 +589,7 @@ html[dir="rtl"] .lb-prev, html[dir="rtl"] .lb-next { transform: translateY(-50%)
   }
   html[data-theme="dark"] { --paper:#fff; --surface:#fff; --surface-2:#fff; --ink-900:#000; --ink-700:#222; --ink-500:#444; --ink-400:#666; --line:#c9c9c9; --line-soft:#e0e0e0; }
 
-  .ambient, .topbar, .toolbar, .lightbox, .hero-fade, .tab-btn, .footer-note { display: none !important; }
+  .ambient, .topbar, .toolbar, .lightbox, .hero-fade, .tab-btn, .footer-note, .edit-link { display: none !important; }
   body {
     background: #fff !important; font-size: 10.5pt; line-height: 1.5;
     -webkit-print-color-adjust: exact; print-color-adjust: exact;   /* keep status pills & badges */
