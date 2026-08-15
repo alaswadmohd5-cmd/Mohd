@@ -36,6 +36,7 @@ window.I18N = {
     'evidence.empty': 'لم تُضف مرفقات بعد.',
 
     'footer.note': 'هذا المستند عرض منظّم لمواد أصلية محفوظة بملفاتها وتواريخها.',
+    'footer.edit': 'إضافة زيارة أو تعديل البيانات ←',
 
     /* stats */
     'stat.completed': 'زيارة منفَّذة',
@@ -123,6 +124,7 @@ window.I18N = {
     'evidence.empty': 'No attachments added yet.',
 
     'footer.note': 'This document is an organised presentation of original materials retained with their files and dates.',
+    'footer.edit': 'Add a visit or edit the data →',
 
     'stat.completed': 'visits completed',
     'stat.hours': 'hours spent together',
