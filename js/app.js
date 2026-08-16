@@ -15,6 +15,7 @@
     template: null,      // القالب المختار
     slots: [],           // لكل خانة: {bmp, zoom, ox, oy, rot} أو null
     sel: -1,             // الخانة المحددة في المحرر
+    orderId: null,       // رقم الطلب — يظهر للزبون ويرافق الدفع والتسليم
     exportBlob: null,
     exportUrl: null,
   };
@@ -152,7 +153,7 @@
       }
       ctx.restore();
       if (!opts.export) {
-        ctx.strokeStyle = i === S.sel ? "#0f766e" : "rgba(0,0,0,.08)";
+        ctx.strokeStyle = i === S.sel ? "#6d28d9" : "rgba(0,0,0,.08)";
         ctx.lineWidth = i === S.sel ? 4 : 1;
         ctx.strokeRect(r.x + ctx.lineWidth / 2, r.y + ctx.lineWidth / 2,
           r.w - ctx.lineWidth, r.h - ctx.lineWidth);
@@ -333,12 +334,15 @@
       if (S.exportUrl) URL.revokeObjectURL(S.exportUrl);
       S.exportBlob = blob;
       S.exportUrl = URL.createObjectURL(blob);
+      S.orderId = "PX-" + (10000 + Math.floor(Math.random() * 90000));
+      $("#order-id").textContent = S.orderId;
       $("#order-preview").src = S.exportUrl;
       $("#order-size").textContent =
         `${S.size.label} — ${S.size.square ? "مربع" : S.orient === "portrait" ? "عمودي" : "أفقي"}` +
         ` — ${S.mode === "border" ? "بإطار" : "بدون إطار"}`;
       $("#order-price").textContent = `${S.size.price} ${CFG.currency}`;
       $("#order-payment").textContent = CFG.paymentNote;
+      $("#btn-pay").hidden = !CFG.paymentLink;
       show("order");
     } finally {
       $("#loading").style.display = "none";
@@ -346,12 +350,11 @@
   }
 
   function orderFileName() {
-    const d = new Date();
-    const pad = n => String(n).padStart(2, "0");
-    return `طلب-طباعة-${S.size.key}-${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}.jpg`;
+    return `Pixora-${S.orderId}-${S.size.key}.jpg`;
   }
   function orderText() {
     return `طلب طباعة جديد 🖨️\n` +
+      `رقم الطلب: ${S.orderId}\n` +
       `المقاس: ${S.size.label}\n` +
       `التصميم: ${S.mode === "border" ? "بإطار" : "بدون إطار"} (${S.template.n} ${S.template.n > 2 ? "صور" : "صورة"})\n` +
       `السعر: ${S.size.price} ${CFG.currency}\n` +
@@ -411,6 +414,9 @@
 
     $("#btn-whatsapp").addEventListener("click", sendWhatsApp);
     $("#btn-save").addEventListener("click", saveImage);
+    $("#btn-pay").addEventListener("click", () => {
+      if (CFG.paymentLink) window.open(CFG.paymentLink, "_blank");
+    });
 
     window.addEventListener("resize", () => {
       if ($("#screen-editor").classList.contains("active")) { sizeCanvas(); draw(); }

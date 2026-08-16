@@ -1,12 +1,12 @@
-name: Publish to the live site
+name: Publish Pixora to the live site
 
-# GitHub Pages serves this site from the gh-pages branch.
+# GitHub Pages serves the site from the gh-pages branch.
 # Every push to the working branch is mirrored there, so the live
-# site always matches the latest data.
+# app always matches the latest code.
 
 on:
   push:
-    branches: [claude/new-website-donmr6, main]
+    branches: [claude/customer-photo-printing-app-4gm2hv, main]
   workflow_dispatch:
 
 permissions:

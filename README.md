@@ -1,173 +1,69 @@
-# سجل الزيارات — Visitation Record
+# Pixora — تطبيق طباعة الصور (كولاج)
 
-موقع ثابت لتوثيق زيارات الأب لابنه، مقسّم بالأشهر، مع الصور والفيديوهات ومحادثات التنسيق،
-وبنسخة مطبوعة/PDF جاهزة للتقديم. ثنائي اللغة (عربي RTL / إنجليزي LTR).
+تطبيق ويب يعمل على **الآيفون والأندرويد (جالكسي)** بدون متاجر تطبيقات.
+الزبون يفتح الرابط، يركّب صوره في تصميم كولاج، ويرسل الصورة النهائية عبر واتساب بعد الدفع.
 
-A static site documenting a father's visits with his son — grouped by month, with photos,
-videos and scheduling messages, plus a print/PDF layout ready for submission. Bilingual (AR/EN).
+**الرابط المباشر:** https://alaswadmohd5-cmd.github.io/Mohd/
 
----
+## الخصوصية 🔒
 
-## ١) كيف أشغّل الموقع؟ · Running it
+- **صور الزبون لا تغادر جهازه أبداً** — كل المعالجة (التركيب، القص، التصدير) تتم داخل متصفحه.
+- لا يوجد خادم ولا قاعدة بيانات ولا رفع ملفات.
+- الشيء الوحيد الذي يصلك هو **الصورة النهائية** التي يرسلها الزبون بنفسه عبر واتساب مع **رقم الطلب**.
 
-**الطريقة الأسهل:** اضغط ضغطاً مزدوجاً على `index.html` — يفتح مباشرة في المتصفح بدون أي برامج.
+## رحلة الزبون
 
-**Simplest:** double-click `index.html`. No build step, no installation.
+1. يختار **المقاس** (10×15، 13×18، مربع، A5، A4) ويشوف **السعر**.
+2. يختار تصميم الكولاج: **بدون إطار** أو **بإطار** (29 تصميماً حتى 16 صورة)، عمودي أو أفقي.
+3. يضيف صوره: سحب لتحريك الصورة داخل الخانة، قرص إصبعين للتكبير، تدوير، استبدال، حذف.
+4. يحصل على **رقم طلب** (مثل PX-48213) وملف **بجودة الطباعة 300dpi**.
+5. يدفع (تحويل أو رابط دفع أونلاين إن فعّلته) ويرسل الصورة + الإيصال + رقم الطلب واتساب.
+6. أنت تطبع وتغلّف وتسلّم — اسم الملف نفسه يحمل رقم الطلب والمقاس: `Pixora-PX-48213-10x15.jpg`.
 
-لتشغيله كخادم محلي (اختياري) · Optional local server:
+## إعداداتك — ملف واحد فقط: `config.js`
 
-```bash
-python3 -m http.server 8000     # ثم افتح · then open  http://localhost:8000
-```
+- `businessName` — اسم المشروع (Pixora).
+- `whatsapp` — رقمك بصيغة دولية بدون + (مسجّل حالياً `97433377411` برمز قطر — إذا الرقم بحريني اجعله `97333377411`).
+- `currency` — العملة (حالياً ر.ق).
+- `paymentLink` — رابط دفع أونلاين (MyFatoorah / Skipcash / Tap…). إذا وضعته يظهر زر «الدفع أونلاين» للزبون. اتركه `""` لإخفائه.
+- `paymentNote` — تعليمات الدفع.
+- `sizes` — المقاسات والأسعار.
 
----
+## الطباعة الآلية مع Epson EcoTank L8050 🖨️
 
-## ٢) أين أضع بياناتي؟ · Where your data goes
+طابعتك تدعم **Epson Connect — Email Print**: تسجّلها مرة واحدة من تطبيق
+Epson Smart Panel أو من epsonconnect.com فتحصل الطابعة على **بريد إلكتروني خاص بها**.
 
-كل شيء في ملف واحد: **`data/visits.js`**
-Everything lives in one file: **`data/visits.js`**
+**سير العمل الموصى به:**
+وصلك الطلب واتساب ← تأكدت من الدفع ← تعمل Forward لصورة الطلب إلى بريد الطابعة ← **تطبع لحالها** وأنت ما لمست كمبيوتر. جهّز الورق المناسب للمقاس، وجمّع طلبات كل مقاس مع بعض لتقليل تبديل الورق (درج الورق واحد).
 
-### الطريقة المُوصى بها: المحرّر · Recommended: the editor
+اجعل بريد الطابعة **سرياً** ولا تعطه لأي زبون — وإلا طبع الناس بدون دفع. ومن لوحة
+Epson Connect حدد «Approved Senders» بحيث لا يُقبل إلا بريدك أنت.
 
-افتح **`editor.html`** — نموذج يبني الملف نيابةً عنك بدون كتابة أي شيفرة:
-عبّئ الحقول، اضغط **«تنزيل الملف»**، وضع الناتج في مجلد `data/` بدل الملف القديم.
-عملك يُحفظ تلقائياً في المتصفح، ويمكنك لصق ملف قديم في خانة «متابعة على ملف موجود» لتكمل عليه.
+## كيف يثبّته الزبون على جواله؟
 
-Open **`editor.html`** — a form that builds the file for you, no code required. Fill it in,
-press **Download**, drop the result into `data/`. Work autosaves in the browser, and an
-existing file can be pasted back in to keep editing it.
+- **آيفون:** افتح الرابط في Safari ← زر المشاركة ← **"إضافة إلى الصفحة الرئيسية"**.
+- **جالكسي/أندرويد:** افتح الرابط في Chrome ← القائمة ⋮ ← **"إضافة إلى الشاشة الرئيسية"**.
 
-### أو يدوياً · Or by hand
+بعد التثبيت يشتغل مثل أي تطبيق، حتى **بدون إنترنت**.
 
-افتحه بأي محرر نصوص (Notepad / TextEdit / VS Code)، عدّل الأمثلة الموجودة، احفظ، ثم حدّث الصفحة.
+## النشر
 
-### شكل الزيارة الواحدة · Shape of one visit
+كل push إلى فرع العمل يُنشر تلقائياً إلى GitHub Pages (فرع `gh-pages`) عبر
+`.github/workflows/deploy.yml`.
 
-```js
-{
-  date: "2026-01-03",          // تاريخ الزيارة · visit date
-  start: "16:00",              // من · from
-  end:   "20:30",              // إلى · to
-  status: "completed",         // completed | declined | rescheduled
-  title:    { ar: "زيارة نهاية الأسبوع", en: "Weekend visit" },
-  location: { ar: "منزل العائلة", en: "Family home" },
-  witness:  { ar: "الجدة", en: "Grandmother" },      // اختياري · optional
-  notes:    { ar: "…", en: "…" },
+> ℹ️ مشروع «سجل الزيارات» السابق أُزيل من الموقع المنشور بناءً على طلب المالك،
+> ونسخته الكاملة محفوظة في الفرع `claude/new-website-donmr6` وفي تاريخ git.
 
-  photos: [ { src: "assets/media/photos/اسم-الملف.jpg",
-              caption: { ar: "…", en: "…" }, taken: "2026-01-03 17:12" } ],
-
-  videos: [ { src: "assets/media/videos/اسم-الملف.mp4",
-              caption: { ar: "…", en: "…" }, taken: "2026-01-03 17:35" } ],
-
-  conversation: {
-    source: { ar: "لقطات واتساب", en: "WhatsApp screenshots" },
-    screenshots: [ { src: "assets/media/chats/لقطة.jpg",
-                     caption: { ar: "…", en: "…" }, taken: "2026-01-02 21:05" } ],
-    messages: [
-      { from: "me",   time: "2026-01-02 20:41", text: { ar: "…", en: "…" } },
-      { from: "them", time: "2026-01-02 21:03", text: { ar: "…", en: "…" } }
-    ]
-  }
-}
-```
-
-### معاني الحالات · Status values
-
-| القيمة | بالعربي | English |
-|---|---|---|
-| `completed` | الزيارة تمت | Visit took place |
-| `declined` | طُلبت ولم تتم | Requested, did not occur |
-| `rescheduled` | أُجّلت لموعد لاحق | Moved to a later date |
-
-> تسجيل المواعيد التي **لم تتم** يقوّي المستند ولا يضعفه: يُظهر أنك طلبت الزيارة وسعيت إليها.
-> Logging visits that **did not** occur strengthens the record — it shows the request was made.
-
----
-
-## ٣) إضافة الصور والفيديوهات · Adding media
-
-ضع الملفات في المجلدات التالية ثم اكتب مسارها في `data/visits.js`:
-
-| المجلد · Folder | المحتوى · Contents |
-|---|---|
-| `assets/media/photos/` | صور الزيارات · visit photos |
-| `assets/media/videos/` | مقاطع الفيديو · video clips (`.mp4`) |
-| `assets/media/chats/`  | لقطات المحادثات · message screenshots |
-
-**تسمية مقترحة · Suggested naming:** `2026-01-03-01.jpg` — التاريخ ثم الترقيم. يسهّل الترتيب والإحالة.
-
-**ملاحظات مهمة · Important notes**
-
-- إذا لم يوجد الملف، تظهر خانة رمادية باسم الملف بدل صورة مكسورة — فيمكنك تجهيز السجل أولاً ثم إضافة الملفات لاحقاً.
-  A missing file shows a labelled grey placeholder instead of a broken image.
-- احتفظ دائماً بالملفات **الأصلية** كما خرجت من الجوال (بتاريخها) في نسخة احتياطية منفصلة.
-  Always keep the **originals** as they came off the phone, in a separate backup.
-- GitHub لا يقبل ملفاً أكبر من ١٠٠ ميغابايت. اضغط الفيديوهات الطويلة أو ضعها على وسيط خارجي.
-  GitHub rejects files over 100 MB — compress long videos or keep them on external media.
-
----
-
-## ٤) نسخة المحكمة (PDF) · The court copy
-
-اضغط زر **«نسخة PDF»** أعلى الصفحة (أو `Ctrl/Cmd + P`) واختر «حفظ كـ PDF».
-
-النسخة المطبوعة تختلف عن الشاشة عمداً:
-
-- كل المرفقات والمحادثات **تُفتح تلقائياً** — لا شيء مخفي خلف زر.
-- تصميم أبيض على A4 بهوامش نظيفة، وكل بطاقة زيارة لا تنقسم بين صفحتين.
-- تُحذف الأزرار وأدوات التصفية.
-- فهرس المرفقات يظهر كجدول مرقّم (`P-001`, `V-001`, `M-001`) يمكن الإحالة إليه في المذكرة.
-
-Press **“PDF copy”** (or `Ctrl/Cmd + P`) → Save as PDF. In print, every drawer is forced open,
-cards never split across pages, and the exhibit index prints as a numbered table.
-
----
-
-## ٥) النشر على الإنترنت · Publishing
-
-الموقع ثابت بالكامل، فيمكن نشره عبر GitHub Pages:
-
-`Settings` → `Pages` → `Source: Deploy from a branch` → اختر الفرع والمجلد `/ (root)`.
-
-> ⚠️ **تنبيه خصوصية:** هذا سجل يخص طفلاً. النشر العام يجعل صوره ومحادثاتك متاحة للجميع
-> ولمحركات البحث. الأنسب هو إبقاء المستودع **خاصاً (Private)** ومشاركة نسخة PDF فقط،
-> أو نقل المجلد كاملاً على ذاكرة USB.
->
-> ⚠️ **Privacy:** this record concerns a child. Publishing it publicly exposes their photos
-> and your private messages. Keeping the repository **private** and sharing only the PDF —
-> or handing over the folder on a USB drive — is the safer route.
-
----
-
-## ٦) بنية الملفات · File structure
+## الملفات
 
 ```
-index.html                 صفحة السجل · the record page
-editor.html                نموذج يبني ملف البيانات · form that builds the data file
-data/visits.js             ← بياناتك · your data
-assets/css/styles.css      التصميم + تنسيق الطباعة · design + print layout
-assets/css/editor.css      تصميم المحرّر · editor styles
-assets/js/i18n.js          نصوص الواجهة بالعربي والإنجليزي · UI strings
-assets/js/guard.js         شاشة الخطأ إذا تعطّل ملف البيانات · data-file guard
-assets/js/app.js           منطق العرض · rendering logic
-assets/js/editor.js        منطق المحرّر · editor logic
-assets/media/photos|videos|chats/   مرفقاتك · your attachments
-```
-
----
-
-## ٧) إذا ظهر خطأ بدل السجل · If an error appears instead of the record
-
-الصفحة لا تظهر فارغة أبداً: إذا تعذّر قراءة `data/visits.js` تظهر شاشة تشرح السبب —
-غالباً فاصلة `,` ناقصة أو زائدة، أو علامة تنصيص `"` غير مغلقة.
-
-أسهل حل: أعِد بناء الملف من **`editor.html`** بدل إصلاحه يدوياً.
-The page never goes blank — a guard screen explains the problem. The quickest fix is to
-rebuild the file from **`editor.html`**.
-
-لمعرفة رقم السطر: `F12` → تبويب `Console`. أو تحقق من الملف بالأمر:
-
-```bash
-node -e "global.window={};require('./data/visits.js');console.log('OK')"
+index.html            الواجهة (٤ شاشات: المقاس ← التصميم ← المحرر ← الطلب)
+config.js             ← إعداداتك (الاسم، الواتساب، الأسعار، رابط الدفع)
+css/app.css           التصميم — عربي RTL، جوال أولاً
+js/layouts.js         قوالب الكولاج (29 قالباً)
+js/app.js             المنطق: اللمس، الرسم، التصدير 300dpi، رقم الطلب، الإرسال
+manifest.webmanifest  تعريف التطبيق للتثبيت على الجوال
+sw.js                 العمل بدون إنترنت
+icons/                أيقونات التطبيق
 ```

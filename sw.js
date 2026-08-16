@@ -1,5 +1,5 @@
 /* عامل الخدمة — يجعل التطبيق يعمل بدون إنترنت بعد أول زيارة */
-const CACHE = "print-app-v1";
+const CACHE = "pixora-v2";
 const SHELL = [
   "./",
   "./index.html",

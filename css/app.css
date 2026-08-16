@@ -1,14 +1,16 @@
 /* تصميم التطبيق — جوال أولاً، عربي RTL */
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+[hidden] { display: none !important; }
 
 :root {
-  --teal: #0f766e;
-  --teal-dark: #0b5a54;
-  --ink: #1d3138;
-  --bg: #f2f5f6;
+  --teal: #6d28d9;        /* لون Pixora الأساسي (بنفسجي) */
+  --teal-dark: #5b21b6;
+  --ink: #241b33;
+  --bg: #f5f3f9;
   --card: #ffffff;
-  --line: #dde4e7;
+  --line: #e3ddef;
   --whatsapp: #1fa855;
+  --pay: #1d4ed8;
 }
 
 html { height: 100%; }
@@ -42,8 +44,12 @@ body {
 
 /* ---------- الرئيسية ---------- */
 .hero {
-  background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
   color: #fff; padding: 26px 20px; text-align: center;
+}
+.hero .brand {
+  font-size: 2rem; font-weight: 900; letter-spacing: .5px; margin-bottom: 6px;
+  font-family: "Segoe UI", -apple-system, sans-serif;
 }
 .hero h2 { font-size: 1.3rem; margin-bottom: 8px; }
 .hero p { font-size: .95rem; opacity: .92; line-height: 1.7; }
@@ -59,20 +65,20 @@ body {
 }
 .size-card:active { transform: scale(.98); }
 .size-shape {
-  width: 34px; background: #d7e3e1; border: 2px solid var(--teal);
+  width: 34px; background: #e6def7; border: 2px solid var(--teal);
   border-radius: 4px; flex-shrink: 0;
 }
 .size-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
 .size-info b { font-size: 1.05rem; }
 .size-info small { color: #74868d; }
 .size-price {
-  background: #e5f2f0; color: var(--teal-dark); font-weight: 800;
+  background: #ede9f8; color: var(--teal-dark); font-weight: 800;
   padding: 8px 12px; border-radius: 10px; white-space: nowrap;
 }
 
 .privacy-note {
   margin: 22px 16px; padding: 12px 14px; border-radius: 12px;
-  background: #e8f1ef; color: #33555b; font-size: .85rem; line-height: 1.7;
+  background: #ece7f6; color: #4c3f66; font-size: .85rem; line-height: 1.7;
   text-align: center;
 }
 .privacy-note.small { background: none; margin: 4px 0 0; }
@@ -144,6 +150,7 @@ body {
 }
 .cta:active { background: var(--teal-dark); }
 .cta.whatsapp { background: var(--whatsapp); }
+.cta.pay { background: var(--pay); }
 .cta.ghost { background: none; color: var(--teal); border: 2px solid var(--teal); }
 
 /* ---------- إتمام الطلب ---------- */
@@ -163,6 +170,10 @@ body {
 .order-details dt { color: #74868d; }
 .order-details dd { font-weight: 700; }
 .order-details .price { color: var(--teal-dark); font-size: 1.1rem; }
+.order-details .order-id {
+  color: var(--teal-dark); font-family: ui-monospace, monospace;
+  letter-spacing: 1px; direction: ltr;
+}
 .payment-note {
   width: 100%; background: #fff7e6; border: 1px solid #f1e0b8; color: #7a5d19;
   border-radius: 12px; padding: 12px 14px; font-size: .88rem; line-height: 1.8;
@@ -179,7 +190,7 @@ body {
 }
 .spinner {
   width: 38px; height: 38px; border-radius: 50%;
-  border: 4px solid #cfe0de; border-top-color: var(--teal);
+  border: 4px solid #ddd3f0; border-top-color: var(--teal);
   animation: spin .8s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
