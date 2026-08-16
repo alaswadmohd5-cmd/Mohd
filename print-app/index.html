@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>طباعة الصور</title>
+  <meta name="description" content="ركّب صورك في تصميم كولاج وأرسلها للطباعة — كل المعالجة داخل جهازك.">
+  <meta name="theme-color" content="#0f766e">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="طباعة الصور">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+  <input type="file" id="file-input" accept="image/*" multiple hidden>
+
+  <div id="loading" style="display:none"><div class="spinner"></div><span>لحظات…</span></div>
+
+  <!-- ================= الشاشة الرئيسية ================= -->
+  <section class="screen active" id="screen-home">
+    <header class="appbar">
+      <h1 id="biz-name">طباعة الصور</h1>
+    </header>
+    <div class="hero">
+      <h2>اطبع صورك بكل خصوصية 🔒</h2>
+      <p>صورك لا تغادر جهازك أبداً — تركّب التصميم بنفسك، وترسل لنا الصورة النهائية فقط.</p>
+    </div>
+    <h3 class="section-title">اختر المقاس</h3>
+    <div id="size-list"></div>
+    <footer class="privacy-note">
+      🔒 خصوصية كاملة: كل المعالجة تتم داخل جهازك، ولا تُرفع صورك لأي خادم.
+    </footer>
+  </section>
+
+  <!-- ================= اختيار التصميم ================= -->
+  <section class="screen" id="screen-layout">
+    <header class="appbar">
+      <button class="back" data-nav="home">رجوع</button>
+      <h1>اختر التصميم</h1>
+      <span class="appbar-side" id="layout-size-label"></span>
+    </header>
+    <div class="tabs-row">
+      <nav id="mode-tabs" class="tabs">
+        <button data-mode="borderless" class="active">بدون إطار</button>
+        <button data-mode="border">بإطار</button>
+      </nav>
+      <button id="orient-toggle" class="chip">🔄 <span id="orient-label">عمودي</span></button>
+    </div>
+    <div id="layout-grid"></div>
+  </section>
+
+  <!-- ================= المحرر ================= -->
+  <section class="screen" id="screen-editor">
+    <header class="appbar">
+      <button class="back" data-nav="layout">التصاميم</button>
+      <h1>ركّب صورك</h1>
+      <span class="appbar-side" id="filled-count"></span>
+    </header>
+    <p class="hint">اضغط خانة فارغة لإضافة صورة · اسحب لتحريكها · قرّب إصبعيك للتكبير</p>
+    <div id="canvas-box"><canvas id="page-canvas"></canvas></div>
+    <div id="editor-tools">
+      <button id="btn-add-photos" title="إضافة صور">➕ إضافة صور</button>
+      <button data-act="replace" data-need-photo title="استبدال">🔁</button>
+      <button data-act="rotate" data-need-photo title="تدوير">↻</button>
+      <button data-act="zoom-in" data-need-photo title="تكبير">＋</button>
+      <button data-act="zoom-out" data-need-photo title="تصغير">－</button>
+      <button data-act="remove" data-need-photo class="danger" title="إزالة">🗑</button>
+    </div>
+    <button id="btn-finish" class="cta">متابعة الطلب ←</button>
+  </section>
+
+  <!-- ================= إتمام الطلب ================= -->
+  <section class="screen" id="screen-order">
+    <header class="appbar">
+      <button class="back" data-nav="editor">تعديل</button>
+      <h1>إتمام الطلب</h1>
+    </header>
+    <div class="order-wrap">
+      <img id="order-preview" alt="معاينة الطباعة">
+      <dl class="order-details">
+        <div><dt>المقاس</dt><dd id="order-size"></dd></div>
+        <div><dt>السعر</dt><dd id="order-price" class="price"></dd></div>
+      </dl>
+      <p class="payment-note" id="order-payment"></p>
+      <button id="btn-whatsapp" class="cta whatsapp">إرسال الطلب عبر واتساب 📲</button>
+      <button id="btn-save" class="cta ghost">حفظ الصورة في جهازي 💾</button>
+      <p class="privacy-note small">تُرسل الصورة النهائية فقط — صورك الأصلية تبقى في جهازك.</p>
+    </div>
+  </section>
+
+  <script src="config.js"></script>
+  <script src="js/layouts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

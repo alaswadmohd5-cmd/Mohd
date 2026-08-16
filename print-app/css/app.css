@@ -1,0 +1,185 @@
+/* تصميم التطبيق — جوال أولاً، عربي RTL */
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --teal: #0f766e;
+  --teal-dark: #0b5a54;
+  --ink: #1d3138;
+  --bg: #f2f5f6;
+  --card: #ffffff;
+  --line: #dde4e7;
+  --whatsapp: #1fa855;
+}
+
+html { height: 100%; }
+body {
+  font-family: -apple-system, "Segoe UI", Tahoma, "Noto Kufi Arabic", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100%;
+  padding-bottom: env(safe-area-inset-bottom);
+  touch-action: manipulation;
+}
+
+.screen { display: none; min-height: 100vh; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* ---------- الشريط العلوي ---------- */
+.appbar {
+  display: flex; align-items: center; gap: 10px;
+  padding: calc(12px + env(safe-area-inset-top)) 16px 12px;
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; z-index: 5;
+}
+.appbar h1 { font-size: 1.15rem; color: var(--teal); flex: 1; text-align: center; }
+.appbar .back {
+  border: 0; background: none; color: var(--teal);
+  font-size: 1rem; font-weight: 700; cursor: pointer; padding: 6px 2px;
+}
+.appbar-side { font-size: .85rem; color: #6b7d84; min-width: 3.5em; text-align: left; }
+#screen-home .appbar h1 { text-align: center; }
+
+/* ---------- الرئيسية ---------- */
+.hero {
+  background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+  color: #fff; padding: 26px 20px; text-align: center;
+}
+.hero h2 { font-size: 1.3rem; margin-bottom: 8px; }
+.hero p { font-size: .95rem; opacity: .92; line-height: 1.7; }
+
+.section-title { padding: 18px 16px 10px; font-size: 1rem; color: #45585f; }
+
+#size-list { display: flex; flex-direction: column; gap: 10px; padding: 0 16px; }
+.size-card {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+  padding: 14px 16px; cursor: pointer; font: inherit; text-align: start;
+  transition: transform .06s;
+}
+.size-card:active { transform: scale(.98); }
+.size-shape {
+  width: 34px; background: #d7e3e1; border: 2px solid var(--teal);
+  border-radius: 4px; flex-shrink: 0;
+}
+.size-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.size-info b { font-size: 1.05rem; }
+.size-info small { color: #74868d; }
+.size-price {
+  background: #e5f2f0; color: var(--teal-dark); font-weight: 800;
+  padding: 8px 12px; border-radius: 10px; white-space: nowrap;
+}
+
+.privacy-note {
+  margin: 22px 16px; padding: 12px 14px; border-radius: 12px;
+  background: #e8f1ef; color: #33555b; font-size: .85rem; line-height: 1.7;
+  text-align: center;
+}
+.privacy-note.small { background: none; margin: 4px 0 0; }
+
+/* ---------- اختيار التصميم ---------- */
+.tabs-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px; background: var(--card); border-bottom: 1px solid var(--line);
+  position: sticky; top: 52px; z-index: 4;
+}
+.tabs { display: flex; flex: 1; }
+.tabs button {
+  flex: 1; border: 0; background: none; font: inherit; font-weight: 700;
+  color: #74868d; padding: 10px 6px; cursor: pointer;
+  border-bottom: 3px solid transparent;
+}
+.tabs button.active { color: var(--teal); border-bottom-color: var(--teal); }
+.chip {
+  border: 1px solid var(--line); background: var(--card); border-radius: 999px;
+  padding: 8px 12px; font: inherit; font-size: .85rem; cursor: pointer; white-space: nowrap;
+}
+
+#layout-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+  padding: 14px; align-items: start;
+}
+@media (min-width: 560px) { #layout-grid { grid-template-columns: repeat(4, 1fr); } }
+.layout-cell {
+  border: 0; background: none; cursor: pointer; font: inherit;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.layout-cell svg {
+  width: 100%; display: block;
+  background: #b9c4c9; padding: 7%;
+  border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,.12);
+}
+.layout-cell:active svg { outline: 3px solid var(--teal); }
+.layout-cell small { color: #74868d; font-size: .75rem; }
+
+/* ---------- المحرر ---------- */
+.hint {
+  padding: 10px 16px; font-size: .82rem; color: #74868d; text-align: center;
+}
+#canvas-box {
+  flex: 1; display: flex; align-items: flex-start; justify-content: center;
+  padding: 4px 14px 10px;
+}
+#page-canvas {
+  background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,.18);
+  touch-action: none; max-width: 100%;
+}
+#editor-tools {
+  display: flex; gap: 8px; padding: 10px 14px; justify-content: center; flex-wrap: wrap;
+}
+#editor-tools button {
+  border: 1px solid var(--line); background: var(--card); border-radius: 12px;
+  font: inherit; font-size: 1.05rem; padding: 10px 14px; cursor: pointer;
+  min-width: 46px;
+}
+#editor-tools button:disabled { opacity: .35; }
+#editor-tools button.danger { color: #b3261e; }
+#btn-add-photos { font-size: .95rem !important; font-weight: 700; color: var(--teal); }
+
+.cta {
+  display: block; margin: 8px 16px calc(14px + env(safe-area-inset-bottom));
+  width: calc(100% - 32px);
+  background: var(--teal); color: #fff; border: 0; border-radius: 14px;
+  font: inherit; font-size: 1.05rem; font-weight: 800; padding: 15px; cursor: pointer;
+}
+.cta:active { background: var(--teal-dark); }
+.cta.whatsapp { background: var(--whatsapp); }
+.cta.ghost { background: none; color: var(--teal); border: 2px solid var(--teal); }
+
+/* ---------- إتمام الطلب ---------- */
+.order-wrap { padding: 16px; display: flex; flex-direction: column; align-items: center; }
+#order-preview {
+  max-width: 75%; max-height: 45vh; object-fit: contain;
+  box-shadow: 0 2px 12px rgba(0,0,0,.2); border-radius: 4px; background: #fff;
+}
+.order-details {
+  width: 100%; margin: 16px 0 6px; background: var(--card);
+  border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+}
+.order-details > div {
+  display: flex; justify-content: space-between; padding: 13px 16px;
+}
+.order-details > div + div { border-top: 1px solid var(--line); }
+.order-details dt { color: #74868d; }
+.order-details dd { font-weight: 700; }
+.order-details .price { color: var(--teal-dark); font-size: 1.1rem; }
+.payment-note {
+  width: 100%; background: #fff7e6; border: 1px solid #f1e0b8; color: #7a5d19;
+  border-radius: 12px; padding: 12px 14px; font-size: .88rem; line-height: 1.8;
+  margin-bottom: 14px;
+}
+.order-wrap .cta { width: 100%; margin: 4px 0; }
+
+/* ---------- التحميل ---------- */
+#loading {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(255,255,255,.75); backdrop-filter: blur(2px);
+  display: flex; flex-direction: column; gap: 12px;
+  align-items: center; justify-content: center; font-weight: 700; color: var(--teal);
+}
+.spinner {
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 4px solid #cfe0de; border-top-color: var(--teal);
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
